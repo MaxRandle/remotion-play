@@ -1,32 +1,34 @@
-import {spring} from 'remotion';
+import { spring } from "remotion";
 import {
 	AbsoluteFill,
 	interpolate,
 	Sequence,
 	useCurrentFrame,
 	useVideoConfig,
-} from 'remotion';
-import {Logo} from './HelloWorld/Logo';
-import {Subtitle} from './HelloWorld/Subtitle';
-import {Title} from './HelloWorld/Title';
-import {z} from 'zod';
-import {zColor} from '@remotion/zod-types';
+} from "remotion";
+import { HelloWorldLogoOnly } from "./HelloWorldLogoOnly";
+import { Subtitle } from "./assets/Subtitle";
+import { Title } from "./assets/Title";
+import { z } from "zod";
+import { zColor } from "@remotion/zod-types";
 
-export const myCompSchema = z.object({
+export const HelloWorldSchema = z.object({
 	titleText: z.string(),
 	titleColor: zColor(),
 	logoColor1: zColor(),
 	logoColor2: zColor(),
 });
 
-export const HelloWorld: React.FC<z.infer<typeof myCompSchema>> = ({
-	titleText: propOne,
-	titleColor: propTwo,
+export type HelloWorldProps = z.infer<typeof HelloWorldSchema>;
+
+export const HelloWorld: React.FC<HelloWorldProps> = ({
+	titleText,
+	titleColor,
 	logoColor1,
 	logoColor2,
 }) => {
 	const frame = useCurrentFrame();
-	const {durationInFrames, fps} = useVideoConfig();
+	const { durationInFrames, fps } = useVideoConfig();
 
 	// Animate from 0 to 1 after 25 frames
 	const logoTranslationProgress = spring({
@@ -50,21 +52,27 @@ export const HelloWorld: React.FC<z.infer<typeof myCompSchema>> = ({
 		[durationInFrames - 25, durationInFrames - 15],
 		[1, 0],
 		{
-			extrapolateLeft: 'clamp',
-			extrapolateRight: 'clamp',
+			extrapolateLeft: "clamp",
+			extrapolateRight: "clamp",
 		}
 	);
 
 	// A <AbsoluteFill> is just a absolutely positioned <div>!
 	return (
-		<AbsoluteFill style={{backgroundColor: 'white'}}>
-			<AbsoluteFill style={{opacity}}>
-				<AbsoluteFill style={{transform: `translateY(${logoTranslation}px)`}}>
-					<Logo logoColor1={logoColor1} logoColor2={logoColor2} />
+		<AbsoluteFill style={{ backgroundColor: "white" }}>
+			<AbsoluteFill style={{ opacity }}>
+				<AbsoluteFill style={{ transform: `translateY(${logoTranslation}px)` }}>
+					<HelloWorldLogoOnly
+						logoColor1={logoColor1}
+						logoColor2={logoColor2}
+					/>
 				</AbsoluteFill>
 				{/* Sequences can shift the time for its children! */}
 				<Sequence from={35}>
-					<Title titleText={propOne} titleColor={propTwo} />
+					<Title
+						titleText={titleText}
+						titleColor={titleColor}
+					/>
 				</Sequence>
 				{/* The subtitle will only enter on the 75th frame. */}
 				<Sequence from={75}>
