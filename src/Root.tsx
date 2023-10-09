@@ -1,5 +1,9 @@
 import { Composition } from "remotion";
 import {
+	GeometricX,
+	GeometricXSchema,
+} from "./compositions/GeometricX/GeometricX";
+import {
 	HelloWorld,
 	HelloWorldLogoOnly,
 	HelloWorldLogoOnlySchema,
@@ -41,6 +45,20 @@ export const RemotionRoot: React.FC = () => {
 					titleColor: "#000000",
 					logoColor1: "#91EAE4",
 					logoColor2: "#86A8E7",
+				}}
+			/>
+			<Composition
+				id="GeometricX"
+				component={GeometricX}
+				durationInFrames={90}
+				fps={30}
+				width={1920}
+				height={1080}
+				schema={GeometricXSchema}
+				defaultProps={{
+					backgroundColor: "#000000",
+					logoLeftHalfColor: "#91EAE4",
+					logoRightHalfColor: "#86A8E7",
 				}}
 			/>
 		</>
